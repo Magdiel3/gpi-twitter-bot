@@ -37,9 +37,9 @@ def check_mentions(api, keywords, since_id, status="Gpi"):
 
         new_since_id = max(tweet.id, new_since_id)
 
-        # Tweet is not a reply
-        if tweet.in_reply_to_status_id is not None:
-            continue
+        # # Tweet is not a reply
+        # if tweet.in_reply_to_status_id is not None:
+        #     continue
 
         # Tweet matches any of the keywords
         if any(keyword in tweet.text.lower() for keyword in keywords) or not keywords:
@@ -63,15 +63,15 @@ def main():
     api = create_api()
 
     # Start from the first Tweet
-    since_id = 1317697433439244293
+    since_id = max(api.user_timeline(count = 1)[0].id,1324902759662051331)
 
     # Counter for printing
-    count = 50
+    count = 600
 
     # Remain updating and replying
     while True:
         count += 1
-        if count > 25:
+        if count > 576:
             logger.info(f"({since_id}) Waiting...")
             count = 1
         since_id = check_mentions(api, [], since_id)
