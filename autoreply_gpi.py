@@ -1,3 +1,4 @@
+from os import stat
 import tweepy
 import logging
 from config import create_api
@@ -8,7 +9,7 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(levelname)s:%(name)s:%(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger()
 
-def check_mentions(api, keywords, since_id, status="Gpi"):
+def check_mentions(api, keywords, since_id, status="Gpi¹"):
     """Get new mentions since last check containing certain keywords
 
     Parameters
@@ -37,18 +38,24 @@ def check_mentions(api, keywords, since_id, status="Gpi"):
 
         new_since_id = max(tweet.id, new_since_id)
 
-        # # Tweet is not a reply
-        # if tweet.in_reply_to_status_id is not None:
-        #     continue
+        # Tweet is not a reply
+        if tweet.in_reply_to_status_id is not None:
+            continue
 
         # Tweet matches any of the keywords
         if any(keyword in tweet.text.lower() for keyword in keywords) or not keywords:
             logger.info(f"({tweet.id}) Answering Gpi to {tweet.user.name}: {tweet.text}")
+            
+            # Build response
+            reply = f"@{tweet.user.screen_name} {status}"
+            
+            if tweet.user.screen_name == "magdieltercero":
+                reply = f"{status}"
 
             # Reply to the matching tweet
             try:
                 api.update_status(
-                    status=f"@{tweet.user.screen_name} {status}",
+                    status=reply,
                     in_reply_to_status_id=tweet.id,
                 )
             except Exception as e:
