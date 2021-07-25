@@ -63,7 +63,7 @@ def main():
     api = create_api()
 
     # Start from the first Tweet
-    since_id = max(api.user_timeline(count = 1)[0].id,1324902759662051331)
+    since_id = max(api.user_timeline(count = 1)[0].id,1419058397706600451)
 
     # Counter for printing
     count = 600
