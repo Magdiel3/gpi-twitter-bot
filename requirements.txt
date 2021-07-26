@@ -1,1 +1,2 @@
 tweepy==3.9.0
+flair==0.8.0.post1

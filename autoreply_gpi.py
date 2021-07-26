@@ -5,6 +5,7 @@ from config import create_api
 import time
 from datetime import datetime
 
+from predict_sentiment import predict
 
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(levelname)s:%(name)s:%(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger()
@@ -44,10 +45,13 @@ def check_mentions(api, keywords, since_id, status="Gpi¹"):
 
         # Tweet matches any of the keywords
         if any(keyword in tweet.text.lower() for keyword in keywords) or not keywords:
-            logger.info(f"({tweet.id}) Answering Gpi to {tweet.user.name}: {tweet.text}")
             
+            (status, label) = predict(tweet.text)
+            
+            logger.info(f"({tweet.id}) Answering {status} to {tweet.user.name}: {tweet.text} \nTweet prediction: {label}")
+
             # Build response
-            reply = f"@{tweet.user.screen_name} {status}"
+            reply = f"@{tweet.user.screen_name} {status}¹"
             
             if tweet.user.screen_name == "magdieltercero":
                 reply = f"{status}"
